@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevelopEye File Admin</title>
+    <!-- Tailwind CSS <!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- Google tag (gtag.js) -->
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevelopEye File Downloader</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Monetag Ad SDK -->
+    <!-- <script src='//libtl.com/sdk.js' data-zone='1234567' data-sdk='show_1234567'></script> -->
+
+    <style>
+        #network-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1; /* keep it behind everything */
+        width: 100%;
+        height: 100%;
+        background: #000000; /* dark background, optional */
+        }
+        
+        
+        /* Neon Glow Utilities */
+        .neon-red:hover {
+        box-shadow: 0 0 10px #f00, 0 0 10px #f00, 0 0 20px #f00;
+        border-color: #f00;
+        transition: border-color box-shadow 0.2s ease-in-out;
+        }
+        
+        .neon-green:hover {
+        box-shadow: 0 0 10px #0f0, 0 0 10px #0f0, 0 0 20px #0f0;
+        border-color: #0f0;
+        transition: border-color box-shadow 0.2s ease-in-out;
+        }
+        
+        .neon-blue:hover {
+        box-shadow: 0 0 10px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;
+        border-color: #0ff;
+        transition: border-color box-shadow 0.2s ease-in-out;
+        }
+        
+            /* Custom styles for animations and aesthetics */
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+            .fade-in { animation: fadeIn 0.8s ease-out forwards; }
+            .slide-up { animation: slideUp 0.6s ease-out forwards; opacity: 0; }
+            .animation-delay-200 { animation-delay: 0.2s; }
+            .animation-delay-400 { animation-delay: 0.4s; }
+            .slider-container { position: relative; overflow: hidden; }
+            .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; }
+            .slider-item { min-width: 100%; box-sizing: border-box; }
+            .slider-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
+            .slider-dot { width: 10px; height: 10px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.5); cursor: pointer; transition: background-color 0.3s; }
+            .slider-dot.active { background-color: white; }
+            body { scrollbar-width: none; }
+            body::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+
+    <div id="app" class="container mx-auto p-4 max-w-7xl">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-transparent-500 to-transparent-600 text-white p-6 rounded-xl shadow-lg mb-8 fade-in">
+            <h1 data-key="main_title" class="text-3xl font-extrabold text-center mb-4">DevelopEye Tutorials</h1>
+            <p data-key="main_subtitle" class="text-center text-lg text-blue-100 mb-6">Watch Ads to Unlock and Download Files for Free!</p>
+            <div class="max-w-2xl mx-auto">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" id="searchInput" data-key-placeholder="search_placeholder" placeholder="Search your file..." class="w-full p-3 pl-10 rounded-full bg-white text-gray-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-shadow duration-300">
+                </div>
+            </div>
+        </header>
+
+        <!-- Ad Slot 1 -->
+        <div id="ad-container-1" class="my-6 flex justify-center min-h-[50px]"></div>
+
+        <!-- Files Section -->
+        <div class="slide-up animation-delay-400">
+            <h2 data-key="available_files" class="text-3xl font-bold text-white mb-6 border-b-4 border-white pb-2">Available Files</h2>
+            <div id="files-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- File cards will be injected here -->
+            </div>
+            <div id="no-results" class="hidden text-center py-12">
+                <i class="fas fa-file-excel text-5xl text-white mb-4"></i>
+                <p data-key="no_results_text" class="text-xl text-white">No files found.</p>
+            </div>
+        </div>
+
+        <!-- Ad Slot 2 -->
+        <div id="ad-container-2" class="my-6 flex justify-center min-h-[50px]"></div>
+
+        <!-- Image Slider -->
+        <div id="slider" class="slider-container w-full h-48 md:h-80 bg-transparent rounded-xl shadow-lg mb-10 slide-up animation-delay-200">
+            <div id="slider-wrapper" class="slider-wrapper h-full"></div>
+            <div id="slider-dots" class="slider-dots"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-900 text-white py-3 px-5 rounded-lg shadow-2xl opacity-0 transform translate-y-10 transition-all duration-500">
+        <p id="toast-message"></p>
+    </div>
+
+    <!-- Language Selection Modal -->
+    <!-- <div id="language-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-2xl text-center fade-in">
+            <h2 class="text-2xl font-bold mb-6">Choose Your Language</h2>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button class="lang-btn px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors" data-lang="en">English</button>
+                <button class="lang-btn px-6 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors" data-lang="hi">हिन्दी</button>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Footer with Ad Slot 3 -->
+    <footer class="bg-transparent-100 py-6 mt-10">
+        <div class="container mx-auto px-4">
+            <div id="ad-container-3" class="my-4 flex justify-center min-h-[50px]"></div>
+            <p class="text-center text-white">&copy; 2025 — DevelopEye Tutorials. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        
+        const firebaseConfig = {
+  apiKey: "AIzaSyBuHBooAMJxZ8zr5MrhT22bKDJBABegOys",
+  authDomain: "d4xowner.firebaseapp.com",
+  databaseURL: "https://d4xowner-default-rtdb.firebaseio.com",
+  projectId: "d4xowner",
+  storageBucket: "d4xowner.firebasestorage.app",
+  messagingSenderId: "563972856555",
+  appId: "1:563972856555:web:aff03b2f4d06676cbfbcae",
+  measurementId: "G-6P9VNVDEJV"
+};
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        const sliderWrapper = document.getElementById('slider-wrapper');
+        const sliderDotsContainer = document.getElementById('slider-dots');
+        const filesGrid = document.getElementById('files-grid');
+        const searchInput = document.getElementById('searchInput');
+        const noResultsMessage = document.getElementById('no-results');
+        const languageModal = document.getElementById('language-modal');
+        
+        let sliderInterval;
+        let currentSlide = 0;
+        let timerDuration = 10; // Default wait time in seconds
+        let currentLang = 'en';
+        
+        const translations = {
+            en: { main_title: "DevelopEye Tutorials", main_subtitle: "Watch Ads to Unlock and Download Files for Free!", search_placeholder: "Search your file...", available_files: "Available Files", no_results_text: "No files found.", no_slides: "No slides are available.", slides_error: "Could not load slides.", no_files_uploaded: "No files have been uploaded yet.", files_error: "Could not load files. Please try again later.", unlock_button: "Unlock ({adCount}/{requiredCount})", download_now_button: "Download Now", toast_download_starting: "Your download is starting...", toast_progress: "Progress: {adCount}/{requiredCount}", toast_unlocked: "Download unlocked!", toast_ad_error: "Could not load ad. Please try again.", loading_ad: "Loading ad...", verifying_button: "Please wait {countdown}s", },
+            /* hi: { main_title: "डेवलपआई ट्यूटोरियल्स", main_subtitle: "विज्ञापन देखें, अनलॉक करें और मुफ्त में फाइलें डाउनलोड करें!", search_placeholder: "फ़ाइलों के लिए खोजें...", available_files: "उपलब्ध फाइलें", no_results_text: "कोई फाईल नहीं मिली।", no_slides: "कोई स्लाइड उपलब्ध नहीं है।", slides_error: "स्लाइड लोड नहीं हो सकीं।", no_files_uploaded: "अभी तक कोई फ़ाइल अपलोड नहीं की गई है।", files_error: "फ़ाइलें लोड नहीं हो सकीं। कृपया बाद में पुनः प्रयास करें।", unlock_button: "अनलॉक ({adCount}/{requiredCount})", download_now_button: "अभी डाउनलोड करें", toast_download_starting: "आपका डाउनलोड शुरू हो रहा है...", toast_progress: "प्रगति: {adCount}/{requiredCount}", toast_unlocked: "डाउनलोड अनलॉक हो गया!", toast_ad_error: "विज्ञापन लोड नहीं हो सका। कृपया पुनः प्रयास करें।", loading_ad: "विज्ञापन लोड हो रहा है...", verifying_button: "कृपया प्रतीक्षा करें... {countdown}s", }, */
+        };
+        
+        function applyLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            localStorage.setItem('userLanguage', lang);
+            document.querySelectorAll('[data-key]').forEach(elem => {
+                const key = elem.getAttribute('data-key');
+                if (translations[lang][key]) elem.textContent = translations[lang][key];
+            });
+            document.querySelectorAll('[data-key-placeholder]').forEach(elem => {
+                const key = elem.getAttribute('data-key-placeholder');
+                if (translations[lang][key]) elem.placeholder = translations[lang][key];
+            });
+            languageModal.classList.add('hidden');
+            loadUserPageData();
+        }
+        
+        function getText(key, params = {}) {
+            let text = translations[currentLang][key] || key;
+            for (const param in params) text = text.replace(`{${param}}`, params[param]);
+            return text;
+        }
+        
+        function showToast(key, params = {}) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = getText(key, params);
+            toast.classList.remove('opacity-0', 'translate-y-10');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10');
+            }, 3000);
+        }
+        
+        function renderAd(containerId, adCode) {
+            if (!adCode) return;
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = adCode;
+            const scripts = Array.from(container.getElementsByTagName('script'));
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement('script');
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
+        }
+        
+        async function loadBannerAds() {
+            try {
+                const docRef = doc(db, "settings", "ads");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const adData = docSnap.data();
+                    renderAd('ad-container-1', adData.adSlot1);
+                    renderAd('ad-container-2', adData.adSlot2);
+                    renderAd('ad-container-3', adData.adSlot3);
+                }
+            } catch (error) {
+                console.error("Error loading banner ads:", error);
+            }
+        }
+        
+        async function loadUserPageData() {
+            loadBannerAds();
+            try {
+                const settingsRef = doc(db, "settings", "general");
+                const docSnap = await getDoc(settingsRef);
+                if (docSnap.exists()) {
+                    timerDuration = docSnap.data().timerDuration || 10;
+                }
+            } catch (error) {
+                console.error("Could not fetch settings, using defaults.", error);
+            }
+        
+            try {
+                const q = query(collection(db, "sliders"));
+                const sliderSnapshot = await getDocs(q);
+                sliderWrapper.innerHTML = '';
+                sliderDotsContainer.innerHTML = '';
+                const slides = [];
+                sliderSnapshot.forEach(doc => slides.push(doc.data()));
+                if (slides.length > 0) {
+                    slides.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+                    slides.forEach((slide, index) => {
+                        const slideEl = document.createElement('div');
+                        slideEl.className = 'slider-item';
+                        const imageHTML = `<img src="${slide.imageUrl}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://www.brasscraft.com/wp-content/uploads/2017/01/no-image-available.png';">`;
+                        slideEl.innerHTML = slide.linkUrl ? `<a href="${slide.linkUrl}" target="_blank" rel="noopener noreferrer">${imageHTML}</a>` : imageHTML;
+                        sliderWrapper.appendChild(slideEl);
+                        const dotEl = document.createElement('div');
+                        dotEl.className = 'slider-dot';
+                        dotEl.dataset.index = index;
+                        sliderDotsContainer.appendChild(dotEl);
+                    });
+                    setupSlider(slides.length);
+                } else {
+                    sliderWrapper.innerHTML = `<div class="slider-item flex items-center justify-center bg-teansparent rounded-xl"><p class="text-white">${getText('no_slides')}</p></div>`;
+                }
+            } catch (error) {
+                console.error("Error loading sliders:", error);
+                sliderWrapper.innerHTML = `<div class="slider-item flex items-center justify-center bg-red-100 rounded-xl"><p class="text-red-600">${getText('slides_error')}</p></div>`;
+            }
+            
+            try {
+                const q = query(collection(db, "files"));
+                const filesSnapshot = await getDocs(q);
+                filesGrid.innerHTML = '';
+                if (filesSnapshot.empty) {
+                    filesGrid.innerHTML = `<p class="col-span-full text-center text-gray-500">${getText('no_files_uploaded')}</p>`;
+                    return;
+                }
+                const files = [];
+                filesSnapshot.forEach(doc => files.push({ id: doc.id, ...doc.data() }));
+                files.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+                files.forEach(file => {
+                    const card = document.createElement('div');
+                     card.className = 'file-card bg-transparent border-2 rounded-xl overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 neon-green';
+                    // (For Title) <h3 class="text-lg font-bold text-white truncate" title="${file.title}">${file.title}</h3>
+                    card.innerHTML = `
+                        <div class="p-4">
+                        <img src="${file.thumbnailUrl}" alt="${file.title}" class="w-full aspect-video object-cover" onerror="this.onerror=null;this.src='https://www.brasscraft.com/wp-content/uploads/2017/01/no-image-available.png';">
+                        <h3 class="text-lg font-bold text-white text-md" title="${file.title}">${file.title}</h3>
+                        <p class="text-white text-sm mt-1 h-10 overflow-hidden">${file.description}</p>
+                        <button data-id="${file.id}" data-url="${file.downloadUrl}" data-required-ads="${file.requiredAds || 0}" class="download-btn w-full mt-4 py-2.5 px-4 rounded-lg text-white font-semibold transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                                <i class="fas"></i>
+                                <span></span>
+                            </button>
+                        </div>
+                    `;
+                    filesGrid.appendChild(card);
+                    updateButtonState(card.querySelector('.download-btn'));
+                });
+            } catch (error) {
+                console.error("Error loading files:", error);
+                filesGrid.innerHTML = `<p class="col-span-full text-center text-red-500">${getText('files_error')}</p>`;
+            }
+        }
+        
+        function setupSlider(slideCount) {
+            if (slideCount <= 1) return;
+            const dots = document.querySelectorAll('.slider-dot');
+            function goToSlide(slideIndex) {
+                currentSlide = (slideIndex + slideCount) % slideCount;
+                sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+                dots.forEach(dot => dot.classList.remove('active'));
+                if(dots[currentSlide]) dots[currentSlide].classList.add('active');
+            }
+            if (sliderInterval) clearInterval(sliderInterval);
+            sliderInterval = setInterval(() => goToSlide(currentSlide + 1), 3000);
+            dots.forEach(dot => dot.addEventListener('click', (e) => goToSlide(parseInt(e.target.dataset.index))));
+            goToSlide(0);
+        }
+        
+        function updateButtonState(button) {
+            const fileId = button.dataset.id;
+            const requiredCount = parseInt(button.dataset.requiredAds);
+            const adCount = parseInt(localStorage.getItem(`adCount_${fileId}`) || 0);
+            const isUnlocked = adCount >= requiredCount;
+            const buttonTextEl = button.querySelector('span');
+            const buttonIconEl = button.querySelector('i');
+            button.disabled = false;
+            const lockedColors = ['bg-gradient-to-r', 'from-blue-500', 'to-purple-600', 'hover:from-blue-600', 'hover:to-purple-700'];
+            const unlockedColors = ['bg-gradient-to-r', 'from-green-400', 'to-green-600', 'hover:from-green-500', 'hover:to-green-700'];
+            button.classList.remove(...lockedColors, ...unlockedColors);
+            if (isUnlocked) {
+                buttonTextEl.textContent = getText('download_now_button');
+                buttonIconEl.className = 'fas fa-download';
+                button.classList.add(...unlockedColors);
+            } else {
+                buttonTextEl.textContent = getText('unlock_button', { adCount, requiredCount });
+                buttonIconEl.className = 'fas fa-lock';
+                button.classList.add(...lockedColors);
+            }
+        }
+        
+        function handleDownloadClick(e) {
+            const button = e.target.closest('.download-btn');
+            if (!button || button.disabled) return;
+            const fileId = button.dataset.id;
+            const downloadUrl = button.dataset.url;
+            const requiredCount = parseInt(button.dataset.requiredAds);
+            const adCount = parseInt(localStorage.getItem(`adCount_${fileId}`) || 0);
+            if (adCount >= requiredCount) {
+                showToast('toast_download_starting');
+                window.open(downloadUrl, '_blank');
+                return;
+            }
+            processAdUnlock(button);
+        }
+        
+        async function processAdUnlock(button) {
+            button.disabled = true;
+            const buttonTextEl = button.querySelector('span');
+            const fileId = button.dataset.id;
+            const requiredCount = parseInt(button.dataset.requiredAds);
+            let adCount = parseInt(localStorage.getItem(`adCount_${fileId}`) || 0);
+            try {
+        buttonTextEl.textContent = getText('loading_ad');
+        
+        // Show GigaPub Rewarded Ad
+        await window.showGiga()
+            .then(() => {
+                console.log("Ad completed!");
+            })
+            .catch(e => {
+                console.error("Ad Error", e);
+                throw e;
+            });
+        
+        // Show Monetag Rewarded Ad
+        // await show_1234567();
+        
+        adCount++;
+        localStorage.setItem(`adCount_${fileId}`, adCount);
+        if (adCount >= requiredCount) {
+            showToast('toast_unlocked');
+            updateButtonState(button);
+            return;
+        }
+        showToast('toast_progress', {
+            adCount,
+            requiredCount
+        });
+        let countdown = timerDuration;
+        buttonTextEl.textContent = getText('verifying_button', {
+            countdown
+        });
+        const timerInterval = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+                buttonTextEl.textContent = getText('verifying_button', {
+                    countdown
+                });
+            } else {
+                clearInterval(timerInterval);
+                updateButtonState(button);
+            }
+        }, 1000);
+            } catch (err) {
+        console.error("Ad failed:", err);
+        showToast('toast_ad_error');
+        updateButtonState(button);
+            }
+        }
+        
+        
+        function handleSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const fileCards = document.querySelectorAll('.file-card');
+            let visibleCount = 0;
+            fileCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                // const description = card.querySelector('p').textContent.toLowerCase();
+                if (title.includes(searchTerm)/* || description.includes(searchTerm)*/) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+        
+        /* window.addEventListener('load', () => {
+            const savedLang = localStorage.getItem('userLanguage');
+            if (savedLang && translations[savedLang]) {
+                applyLanguage(savedLang);
+            } else {
+                languageModal.classList.remove('hidden');
+            }
+        });*/
+              
+               window.addEventListener('load', () => {
+               currentLang = 'en';
+        
+          // apply any [data-key] / [data-key-placeholder] strings
+          document.querySelectorAll('[data-key]').forEach(elem => {
+            const key = elem.getAttribute('data-key');
+            if (translations[currentLang] && translations[currentLang][key]) elem.textContent = translations[currentLang][key];
+          });
+          document.querySelectorAll('[data-key-placeholder]').forEach(elem => {
+            const key = elem.getAttribute('data-key-placeholder');
+            if (translations[currentLang] && translations[currentLang][key]) elem.placeholder = translations[currentLang][key];
+          });
+        
+          // hide language modal if present
+          if (languageModal) languageModal.classList.add('hidden');
+        
+          // finally load files, sliders, ads etc.
+          loadUserPageData();
+        });
+        
+        
+        filesGrid.addEventListener('click', handleDownloadClick);
+        searchInput.addEventListener('keyup', handleSearch);
+        /* document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
+        }); */
+    </script>
+
+
+    <canvas id="network-bg"></canvas>
+    <script>
+        const canvas = document.getElementById('network-bg');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 1.2;
+                this.vy = (Math.random() - 0.5) * 1.2;
+                this.radius = 2;
+            }
+            move() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(0, 255, 30, 2)"; // Dot Colour
+                ctx.fill();
+            }
+        }
+        
+        // Initialize particles
+        const particleCount = 40;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        function drawLines() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0,255,30,${1 - dist / 120})`; // Line Colour & Quantity
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.move();
+                p.draw();
+            });
+            drawLines();
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+
+    <!-- GigaPub Ad SDK -->
+    <script src="https://ad.gigapub.tech/script?id="></script>
+
+</body>
+
+</html> styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        #network-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1; /* keep it behind everything */
+            width: 100%;
+            height: 100%;
+            background: #000000; /* dark background, optional */
+        }
+        
+        /* Neon Glow Utilities */
+        .neon-red:hover {
+        box-shadow: 0 0 10px #f00, 0 0 10px #f00, 0 0 20px #f00;
+        border-color: #f00;
+        transition: border-color box-shadow 0.2s ease-in-out;
+        }
+        
+        .neon-green:hover {
+        box-shadow: 0 0 10px #0f0, 0 0 10px #0f0, 0 0 20px #0f0;
+        border-color: #0f0;
+        transition: border-color box-shadow 0.2s ease-in-out;
+        }
+        
+        .neon-blue:hover {
+        box-shadow: 0 0 10px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;
+        border-color: #0ff;
+        transition: border-color box-shadow 0.2s ease-in-out;
+        }
+    </style>
+
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <!-- Main Container -->
+    <div id="admin-panel" class="container mx-auto p-4 max-w-4xl">
+        <header class="bg-transparent bg-transparent border-2 border-green-700 text-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
+            <div class="text-left ml-5">
+                <h1 class="text-lg font-bold">DevelopEye Tutorials</h1>
+                <h4 class="text-base font-semibold">File Admin Panel</h4>
+            </div>
+            <button id="sign-out-btn" class="hidden bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                Sign Out
+            </button>
+        </header>
+
+        <!-- Admin Login with Google -->
+        <div id="admin-login" class="bg-transparent bg-transparent border-2 border-green-700 p-8 rounded-lg shadow-md max-w-md mx-auto text-center">
+            <h2 class="text-2xl font-bold mb-6 text-white">Admin Login</h2>
+            <p class="text-white mb-6">Please sign in with your Google Account to continue.</p>
+            <button id="google-login-btn" class="bg-white border border-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-lg shadow-sm hover:bg-gray-50 transition duration-300 flex items-center justify-center w-full">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google icon" class="w-6 h-6 mr-3">
+                Sign in with Google
+            </button>
+        </div>
+
+        <!-- Access Denied Message -->
+        <div id="access-denied" class="hidden bg-red-100 border border-green-400 text-red-700 px-4 py-3 rounded-lg relative max-w-md mx-auto text-center" role="alert">
+            <strong class="font-bold">Access Denied!</strong>
+            <span class="block sm:inline">This Google account is not authorized for the admin panel.</span>
+        </div>
+
+        <!-- Admin Content Management (Hidden by default) -->
+        <div id="admin-content" class="hidden">
+            <!-- General Settings -->
+            <div class="bg-transparent p-6 rounded-lg shadow-md mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-4 border-b pb-2">General Settings</h2>
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+                        <label for="timer-duration-setting" class="font-medium text-white w-52 shrink-0">Wait Timer (seconds):</label>
+                        <input type="number" id="timer-duration-setting" value="5" min="0" class="w-24 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <button id="save-settings-btn" class="bg-indigo-500 text-white px-6 py-2 rounded-md hover:bg-indigo-600 font-semibold flex items-center justify-center gap-2 mt-2">
+                        <i class="fas fa-save"></i> Save Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ad Management -->
+            <div class="bg-transparent p-6 rounded-lg shadow-md mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-4 border-b pb-2">Manage Banner Ads</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="ad-slot-1" class="font-medium text-white block mb-1">Ad Slot 1 Code (below the Header):</label>
+                        <textarea id="ad-slot-1" rows="4" placeholder="Paste Ad code here..." class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label for="ad-slot-2" class="font-medium text-white block mb-1">Ad Slot 2 Code (Below the Slider):</label>
+                        <textarea id="ad-slot-2" rows="4" placeholder="Paste Ad code here..." class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-sm"></textarea>
+                    </div>
+                    <div>
+                        <label for="ad-slot-3" class="font-medium text-white block mb-1">Ad Slot 3 Code (in the Footer):</label>
+                        <textarea id="ad-slot-3" rows="4" placeholder="Paste Ad code here..." class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-sm"></textarea>
+                    </div>
+                    <button id="save-ads-btn" class="bg-teal-500 text-white px-6 py-2 rounded-md hover:bg-teal-600 font-semibold flex items-center justify-center gap-2 mt-2">
+                        <i class="fas fa-save"></i> Save Ad Codes
+                    </button>
+                </div>
+            </div>
+
+            <!-- File Management -->
+            <div class="bg-transparent p-6 rounded-lg shadow-md mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-4 border-b pb-2">Manage Files</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="file-title" placeholder="File Title" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="number" id="file-ad-count" placeholder="Ads to Unlock" value="3" min="1" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="url" id="file-thumbnail-url" placeholder="Thumbnail URL" class="p-2 border rounded-md md:col-span-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <textarea id="file-description" placeholder="File Description" class="p-2 border rounded-md md:col-span-2 h-24 focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                    <input type="url" id="file-download-url" placeholder="File Download URL" class="p-2 border rounded-md md:col-span-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <button id="add-file-btn" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 font-semibold flex items-center justify-center gap-2">
+                    <i class="fas fa-upload"></i> Add File
+                </button>
+                <div id="file-list" class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Files will be listed here -->
+                </div>
+            </div>
+
+            <!-- Slider Management -->
+            <div class="bg-transparent p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold text-white mb-4 border-b pb-2">Manage Slider Banners</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="url" id="slider-image-url" placeholder="Slider Image URL" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="url" id="slider-link-url" placeholder="Destination URL (Optional)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <button id="add-slider-btn" class="mt-4 w-full bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 font-semibold flex items-center justify-center gap-2">
+                    <i class="fas fa-plus"></i> Add Slider
+                </button>
+                <div id="slider-list" class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <!-- Slider images will be listed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit File Modal -->
+    <div id="edit-file-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-xl leading-6 font-medium text-gray-900 text-center mb-4">Edit File Details</h3>
+                <div class="mt-2 px-7 py-3 space-y-4">
+                    <input type="hidden" id="edit-file-id">
+                    <input type="text" id="edit-file-title" placeholder="File Title" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="number" id="edit-file-ad-count" placeholder="Ads to Unlock" min="1" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="url" id="edit-file-thumbnail-url" placeholder="Thumbnail URL" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <textarea id="edit-file-description" placeholder="File Description" class="w-full p-2 border rounded-md h-24 focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                    <input type="url" id="edit-file-download-url" placeholder="File Download URL" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div class="flex justify-end items-center px-4 py-3 gap-2">
+                    <button id="cancel-edit-btn" class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-auto shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        Cancel
+                    </button>
+                    <button id="save-edit-btn" class="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-auto shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 text-white py-2 px-4 rounded-lg shadow-lg opacity-0 transition-opacity duration-300">
+        <p id="toast-message"></p>
+    </div>
+
+    <!-- Firebase and App Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, serverTimestamp, query, orderBy, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
+        const firebaseConfig = {
+  apiKey: "AIzaSyBuHBooAMJxZ8zr5MrhT22bKDJBABegOys",
+  authDomain: "d4xowner.firebaseapp.com",
+  databaseURL: "https://d4xowner-default-rtdb.firebaseio.com",
+  projectId: "d4xowner",
+  storageBucket: "d4xowner.firebasestorage.app",
+  messagingSenderId: "563972856555",
+  appId: "1:563972856555:web:aff03b2f4d06676cbfbcae",
+  measurementId: "G-6P9VNVDEJV"
+};
+        
+        const authorizedAdmins = ['d4xowner@gmail.com'];
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        
+        // DOM elements
+        const adminLogin = document.getElementById('admin-login');
+        const adminContent = document.getElementById('admin-content');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        const signOutBtn = document.getElementById('sign-out-btn');
+        const accessDenied = document.getElementById('access-denied');
+        const fileList = document.getElementById('file-list');
+        const sliderList = document.getElementById('slider-list');
+        const editModal = document.getElementById('edit-file-modal');
+        
+        onAuthStateChanged(auth, (user) => {
+            if (user && authorizedAdmins.includes(user.email)) {
+                adminLogin.classList.add('hidden');
+                accessDenied.classList.add('hidden');
+                adminContent.classList.remove('hidden');
+                signOutBtn.classList.remove('hidden');
+                loadAdminData();
+            } else {
+                adminLogin.classList.remove('hidden');
+                adminContent.classList.add('hidden');
+                signOutBtn.classList.add('hidden');
+                if (user) accessDenied.classList.remove('hidden');
+            }
+        });
+        
+        googleLoginBtn.addEventListener('click', () => signInWithPopup(auth, provider));
+        signOutBtn.addEventListener('click', () => signOut(auth));
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('#toast-message').textContent = message;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 3000);
+        }
+        
+        async function loadAdminData() {
+            await loadAdminSettings();
+            await loadAdminAds();
+            await loadAdminSliders();
+            await loadAdminFiles();
+        }
+        
+        // --- Settings Management ---
+        const timerDurationInput = document.getElementById('timer-duration-setting');
+        document.getElementById('save-settings-btn').addEventListener('click', async () => {
+            const duration = parseInt(timerDurationInput.value);
+            if (duration >= 0) {
+                await setDoc(doc(db, "settings", "general"), { timerDuration: duration });
+                showToast("Settings saved!");
+            } else {
+                showToast("Timer cannot be less than 0.");
+            }
+        });
+        
+        async function loadAdminSettings() {
+            const docSnap = await getDoc(doc(db, "settings", "general"));
+            timerDurationInput.value = docSnap.exists() ? docSnap.data().timerDuration : 10;
+        }
+        
+        // --- Ad Management ---
+        const adSlot1Input = document.getElementById('ad-slot-1');
+        const adSlot2Input = document.getElementById('ad-slot-2');
+        const adSlot3Input = document.getElementById('ad-slot-3');
+        
+        document.getElementById('save-ads-btn').addEventListener('click', async () => {
+            const adData = {
+                adSlot1: adSlot1Input.value,
+                adSlot2: adSlot2Input.value,
+                adSlot3: adSlot3Input.value,
+            };
+            await setDoc(doc(db, "settings", "ads"), adData);
+            showToast("Ad codes saved!");
+        });
+        
+        async function loadAdminAds() {
+            const docRef = doc(db, "settings", "ads");
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const adData = docSnap.data();
+                adSlot1Input.value = adData.adSlot1 || '';
+                adSlot2Input.value = adData.adSlot2 || '';
+                adSlot3Input.value = adData.adSlot3 || '';
+            }
+        }
+        
+        // --- Slider Management ---
+        document.getElementById('add-slider-btn').addEventListener('click', async () => {
+            const imageUrl = document.getElementById('slider-image-url').value;
+            if (!imageUrl) return showToast("Slider Image URL is required.");
+            const linkUrl = document.getElementById('slider-link-url').value;
+            await addDoc(collection(db, "sliders"), { imageUrl, linkUrl: linkUrl || "", createdAt: serverTimestamp() });
+            showToast("Slider added!");
+            document.getElementById('slider-image-url').value = '';
+            document.getElementById('slider-link-url').value = '';
+            loadAdminSliders();
+        });
+        
+        async function loadAdminSliders() {
+            sliderList.innerHTML = '<p class="col-span-full text-center">Loading...</p>';
+            const q = query(collection(db, "sliders"), orderBy("createdAt", "desc"));
+            const querySnapshot = await getDocs(q);
+            sliderList.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const slider = doc.data();
+                const sliderEl = document.createElement('div');
+                sliderEl.className = 'relative group';
+                sliderEl.innerHTML = `
+                    <img src="${slider.imageUrl}" class="w-full h-24 object-cover rounded-md border">
+                    <p class="text-xs truncate text-center p-1">${slider.linkUrl || 'No link'}</p>
+                    <button data-id="${doc.id}" class="delete-slider-btn absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100">&times;</button>
+                `;
+                sliderList.appendChild(sliderEl);
+            });
+        }
+        
+        sliderList.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-slider-btn')) {
+                if (confirm("Do you want to delete it?")) {
+                    await deleteDoc(doc(db, "sliders", e.target.dataset.id));
+                    showToast("Slider has been deleted.");
+                    loadAdminSliders();
+                }
+            }
+        });
+        
+        // --- File Management ---
+        document.getElementById('add-file-btn').addEventListener('click', async () => {
+            const title = document.getElementById('file-title').value;
+            const thumbnailUrl = document.getElementById('file-thumbnail-url').value;
+            const description = document.getElementById('file-description').value;
+            const downloadUrl = document.getElementById('file-download-url').value;
+            const requiredAds = parseInt(document.getElementById('file-ad-count').value);
+        
+            if (!title || !downloadUrl) return showToast("Please fill in all file fields.");
+            // if (requiredAds <= 0) return showToast("Ads should be more than 0.");
+        
+            await addDoc(collection(db, "files"), { title, thumbnailUrl, description, downloadUrl, requiredAds, createdAt: serverTimestamp() });
+            showToast("File has been added!");
+            ['file-title', 'file-thumbnail-url', 'file-description', 'file-download-url'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('file-ad-count').value = 3;
+            loadAdminFiles();
+        });
+        
+        async function loadAdminFiles() {
+            fileList.innerHTML = '<p class="col-span-full text-center">Loading...</p>';
+            const q = query(collection(db, "files"), orderBy("createdAt", "desc"));
+            const querySnapshot = await getDocs(q);
+            fileList.innerHTML = '';
+            querySnapshot.forEach((doc) => {
+                const file = doc.data();
+                const fileEl = document.createElement('div');
+                fileEl.className = 'bg-transparent border-2 p-4 rounded-lg neon-green';
+                fileEl.innerHTML = `
+                    <img src="${file.thumbnailUrl}" alt="${file.title}" class="w-full aspect-video object-cover" onerror="this.onerror=null;this.src='https://www.brasscraft.com/wp-content/uploads/2017/01/no-image-available.png';">
+                    <h3 class="font-bold text-white text-md">${file.title}</h3>
+                    <p class="text-sm text-white truncate my-1">${file.description}</p>
+                    <p class="text-sm font-semibold text-white mt-2">Ads to Unlock: ${file.requiredAds || 'N/A'}</p>
+                    <div class="flex gap-2 mt-2">
+                         <button data-id="${doc.id}" class="edit-file-btn w-full bg-yellow-500 text-white py-1 rounded-md hover:bg-yellow-600 font-semibold flex items-center justify-center gap-2">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button data-id="${doc.id}" class="delete-file-btn w-full bg-red-500 text-white py-1 rounded-md hover:bg-red-600 font-semibold flex items-center justify-center gap-2">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                fileList.appendChild(fileEl);
+            });
+        }
+        
+        fileList.addEventListener('click', async (e) => {
+            const deleteBtn = e.target.closest('.delete-file-btn');
+            const editBtn = e.target.closest('.edit-file-btn');
+        
+            if (deleteBtn) {
+                if (confirm("Do you want to delete this file?")) {
+                    await deleteDoc(doc(db, "files", deleteBtn.dataset.id));
+                    showToast("The file has been deleted.");
+                    loadAdminFiles();
+                }
+            } else if (editBtn) {
+                const fileId = editBtn.dataset.id;
+                const fileRef = doc(db, "files", fileId);
+                const docSnap = await getDoc(fileRef);
+                if (docSnap.exists()) {
+                    const fileData = docSnap.data();
+                    document.getElementById('edit-file-id').value = fileId;
+                    document.getElementById('edit-file-title').value = fileData.title;
+                    document.getElementById('edit-file-ad-count').value = fileData.requiredAds;
+                    document.getElementById('edit-file-thumbnail-url').value = fileData.thumbnailUrl;
+                    document.getElementById('edit-file-description').value = fileData.description;
+                    document.getElementById('edit-file-download-url').value = fileData.downloadUrl;
+                    editModal.classList.remove('hidden');
+                }
+            }
+        });
+        
+        // --- Edit Modal Logic ---
+        document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+            editModal.classList.add('hidden');
+        });
+        
+        document.getElementById('save-edit-btn').addEventListener('click', async () => {
+            const fileId = document.getElementById('edit-file-id').value;
+            const updatedData = {
+                title: document.getElementById('edit-file-title').value,
+                requiredAds: parseInt(document.getElementById('edit-file-ad-count').value),
+                thumbnailUrl: document.getElementById('edit-file-thumbnail-url').value,
+                description: document.getElementById('edit-file-description').value,
+                downloadUrl: document.getElementById('edit-file-download-url').value
+            };
+        
+            if (!updatedData.title || !updatedData.downloadUrl) {
+                return showToast("Please fill in all the fields.");
+            }
+            /* if (updatedData.requiredAds <= 0) {
+                return showToast("Ads should be more than 0.");
+            } */
+        
+            const fileRef = doc(db, "files", fileId);
+            await updateDoc(fileRef, updatedData);
+            
+            showToast("The file was updated successfully!");
+            editModal.classList.add('hidden');
+            loadAdminFiles();
+        });
+              
+              
+        async function addSmartAdToggleButton() {
+          const container = document.getElementById("admin-content");
+          const fileList = document.getElementById("file-list");
+          const toggleBtn = document.createElement("button");
+          toggleBtn.id = "toggle-ads-btn";
+          toggleBtn.className =
+            "w-full py-3 rounded-md font-semibold flex items-center justify-center gap-2 mt-6 transition-colors";
+          container.appendChild(toggleBtn);
+          
+          fileList.before(toggleBtn);
+        
+          const setButtonState = (enabled) => {
+            if (enabled) {
+              toggleBtn.className =
+        "w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 font-semibold flex items-center justify-center gap-2 mt-6";
+              toggleBtn.innerHTML = `<i class="fas fa-toggle-on"></i> Disable Ads (0 Ads)`;
+            } else {
+              toggleBtn.className =
+        "w-full bg-red-600 text-white py-3 rounded-md hover:bg-red-700 font-semibold flex items-center justify-center gap-2 mt-6";
+              toggleBtn.innerHTML = `<i class="fas fa-toggle-off"></i> Enable Ads (3 Ads)`;
+            }
+          };
+        
+          const q = query(collection(db, "files"));
+          const querySnapshot = await getDocs(q);
+          let adsEnabled = false;
+          querySnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            if (data.requiredAds && data.requiredAds > 0) adsEnabled = true;
+          });
+          setButtonState(adsEnabled);
+        
+          toggleBtn.addEventListener("click", async () => {
+            const confirmMsg = adsEnabled
+              ? "Disable all ads (0 Ads) for every file?"
+              : "Enable ads (3 Ads) for every file?";
+            if (!confirm(confirmMsg)) return;
+        
+            const newRequiredAds = adsEnabled ? 0 : 3; // --- Enable Button Ads---
+            showToast(adsEnabled ? "Disabling all ads..." : "Enabling ads...");
+        
+            const q = query(collection(db, "files"));
+            const snap = await getDocs(q);
+            let updated = 0;
+            for (const docSnap of snap.docs) {
+              await updateDoc(doc(db, "files", docSnap.id), {
+        requiredAds: newRequiredAds,
+              });
+              updated++;
+            }
+        
+            showToast(
+              adsEnabled
+        ? `Disabled ads for ${updated} files`
+        : `Enabled ads (Set 3) for ${updated} files`
+            );
+        
+            adsEnabled = !adsEnabled;
+            setButtonState(adsEnabled);
+            loadAdminFiles();
+          });
+        }
+        
+        addSmartAdToggleButton();
+              
+        
+    </script>
+
+
+    <canvas id="network-bg"></canvas>
+    <script>
+        const canvas = document.getElementById('network-bg');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 1.2;
+                this.vy = (Math.random() - 0.5) * 1.2;
+                this.radius = 2;
+            }
+            move() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(0, 255, 30, 2)"; // Dot Colour
+                ctx.fill();
+            }
+        }
+        
+        // Initialize particles
+        const particleCount = 40;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+        
+        function drawLines() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0,255,30,${1 - dist / 120})`; // Line Colour & Quantity
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.move();
+                p.draw();
+            });
+            drawLines();
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+
+</body>
+
+</html>
